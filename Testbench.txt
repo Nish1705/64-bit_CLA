@@ -1,0 +1,66 @@
+module testbench_cla_64_bit();
+
+  reg [63:0] A, B;
+  reg Cin;
+  wire [63:0] S;
+  wire Cout;
+
+  // Instantiate the CLA 64-bit adder
+  cla_64_bit uut(
+    .A(A),
+    .B(B),
+    .Cin(Cin),
+    .S(S),
+    .Cout(Cout)
+  );
+
+  // Clock generation
+  reg clk = 0;
+  
+
+  // Test stimulus
+  initial begin
+    $dumpfile("wavedump.vcd");
+    $dumpvars();
+    $monitor("Time=%0t A=%h B=%h Cin=%b S=%h Cout=%b", $time, A, B, Cin, S, Cout);
+
+    // Test case 1
+    A = 64'h0000000000000000;
+    B = 64'h1111111111111111;
+    Cin = 1'b0;
+    #50;
+
+    $finish;
+  end
+
+  // Clock generation
+  always begin
+    #10 clk = ~clk;
+  end
+
+  // Apply inputs
+  initial begin
+    $dumpfile("wavedump.vcd");
+    $dumpvars();
+    $monitor("Time=%0t A=%h B=%h Cin=%b S=%h Cout=%b", $time, A, B, Cin, S, Cout);
+    
+    #2	A = 64'h0000000000000000;
+    	B = 64'h0000000000000001;
+    	Cin = 1'b0;
+    #5 A = 64'h0000000000000000;
+       B = 64'h0000000000000010;
+       Cin = 1'b1;
+    #5 A = 64'h0000000000000000;
+       B = 64'h0000000000000000;
+       Cin = 1'b0;
+    #5 A = 64'h1000000000000111;
+       B = 64'hf000000000000001;
+       Cin = 1'b1;
+    #5 A = 64'h0000000000000111;
+       B = 64'h0000000000000001;
+       Cin = 1'b0;
+    
+    $finish;
+  end
+
+endmodule
